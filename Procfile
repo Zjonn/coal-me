@@ -1,2 +1,2 @@
-web: ./target/release/coal-me static/
+web: ./target/release/coal-me
 
