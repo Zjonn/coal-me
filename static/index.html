@@ -1,12 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="pl">
+
 <head>
-<meta charset="UTF-8">
-<title>Title of the document</title>
+    <meta charset="utf-8">
+    <title>title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
-Content of the document......
+    <table id="users" class="table">
+        <thead>
+            <tr class="table-hd">
+                <th>Imie</th>
+                <th>Nazwisko</th>
+                <th>Kod pocztowy</th>
+                <th>Data urodzenia</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>John </td>
+                <td>Doe</td>
+                <td>123</td>
+                <td>12-01-1990</td>
+                <td> <button class="rm_button">Remove</button></td>
+            </tr>
+        </tbody>
+    </table>
+    <button id="create-user" class="button">Create new user</button>
+
+    <div id="dialog-confirm" title="Na pewno chcesz usunąć wpis?">
+    </div>
+
+    <SCRIPT language="javascript" type="text/javascript" src="main.js"></SCRIPT>
 </body>
 
 </html>

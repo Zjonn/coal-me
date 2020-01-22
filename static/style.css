@@ -1,0 +1,19 @@
+.wrapper {
+  width: 600px;
+  height: 600px;
+}
+
+
+.table {
+  margin: 2px 2px 2px 2px;
+  border: 5px solid #ccc;
+  border-collapse: collapse;
+  padding: 1px;
+}
+
+th,
+td {
+  margin: 2px 2px 2px 2px;
+  border: 1px solid rgb(87, 2, 2);
+  padding: 8px;
+}
