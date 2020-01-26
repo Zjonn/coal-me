@@ -20,14 +20,9 @@ fn welcome(req: &HttpRequest) -> Result<HttpResponse> {
 }
 
 fn static_data(req: &HttpRequest) -> Result<HttpResponse> {
-    let wanted_res = format!("../static/{}", req.match_info().get("name").unwrap_or("42"));
-    if path::Path::new(wanted_res).exists() {
-        Ok(HttpResponse::build(StatusCode::OK)
-            .content_type(req.content_type())
-            .body(include_str!(wanted_res)))
-    } else {
-        Err(HttpResponse::build(StatusCode::NOT_FOUND))
-    }
+    Ok(HttpResponse::build(StatusCode::OK)
+        .content_type("text/html; charset=utf-8")
+        .body(include_str!("../static/index.html")))
 }
 
 fn greet(req: &HttpRequest) -> impl Responder {
@@ -45,9 +40,11 @@ fn main() {
     // Start a server, configuring the resources to serve.
     server::new(|| {
         App::new()
-            .resource("/", |r| r.f(welcome))
+            .resource("/test", |r| r.f(welcome))
             .resource("/static/{res}", |r| r.f(static_data))
-            .resource("/{name}", |r| r.f(greet))
+            .resource("/req/{name}", |r| r.f(greet))
+            .handler("/", fs::StaticFiles::new("./static/").unwrap().index_file("index.html"))
+            
     })
     .bind(("0.0.0.0", port))
     .expect("Can not bind to port 8000")
