@@ -40,10 +40,11 @@ fn main() {
     // Start a server, configuring the resources to serve.
     server::new(|| {
         App::new()
+            .handler("/", fs::StaticFiles::new("./static/").unwrap().index_file("index.html"))
             .resource("/test", |r| r.f(welcome))
             .resource("/static/{res}", |r| r.f(static_data))
             .resource("/req/{name}", |r| r.f(greet))
-            .handler("/", fs::StaticFiles::new("./static/").unwrap().index_file("index.html"))
+            
             
     })
     .bind(("0.0.0.0", port))

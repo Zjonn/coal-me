@@ -6,6 +6,9 @@
     <title>title</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+    <meta name="google-signin-client_id" content="235912383538-s7l0etjcqpcm125gsipdpuda2ac6kngd.apps.googleusercontent.com">
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
@@ -31,11 +34,11 @@
         </tbody>
     </table>
     <button id="create-user" class="button">Create new user</button>
-
+   
     <div id="dialog-confirm" title="Na pewno chcesz usunąć wpis?">
     </div>
-
     <SCRIPT language="javascript" type="text/javascript" src="main.js"></SCRIPT>
+    <div class="g-signin2" data-onsuccess="onSignIn"></div>
 </body>
 
 </html>
