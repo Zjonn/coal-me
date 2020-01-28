@@ -1,2 +1,2 @@
-web: ./target/release/coal-me
+web: ./target/release/coal-me login/index.html
 
