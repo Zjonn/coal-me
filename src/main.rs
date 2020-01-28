@@ -1,41 +1,30 @@
-//! Example actix-web application.
-//!
-//! This code is adapted from the front page of the [Actix][] website.
-//!
-//! [actix]: https://actix.rs/docs/
+use chrono;
+use std::env;
+
+use diesel::pg::PgConnection;
+use diesel::prelude::*;
+
+use actix_diesel::Database;
+use actix_files as fs;
+use actix_identity::{CookieIdentityPolicy, IdentityService};
+use actix_web::{web, App, HttpRequest, HttpResponse, HttpServer, Responder, Result};
+
+mod auth;
 
 #[macro_use]
 extern crate lazy_static;
 
-use chrono;
-
-use actix_files as fs;
-use actix_identity::{CookieIdentityPolicy, IdentityService};
-
-use actix_web::http::{StatusCode};
-use actix_web::{web, App, HttpRequest, HttpResponse, HttpServer, Responder, Result};
-
-use std::env;
-
-// fn welcome(req: &HttpRequest) -> Result<HttpResponse> {
-//     Ok(HttpResponse::build(StatusCode::OK)
-//         .content_type("text/html; charset=utf-8")
-//         .body(include_str!("../static/index.html")))
-// }
-
-// fn static_data(req: &HttpRequest) -> Result<HttpResponse> {
-//     Ok(HttpResponse::build(StatusCode::OK)
-//         .content_type("text/html; charset=utf-8")
-//         .body(include_str!("../static/index.html")))
-// }
-
-// fn greet(req: &HttpRequest) -> impl Responder {
-//     let to = req.match_info().get("name").unwrap_or("World");
-//     format!("Hello {}!", to)
-// }
-
 lazy_static::lazy_static! {
 pub  static ref SECRET_KEY: String = "CoalME".repeat(8);
+}
+
+pub struct AppState {
+    db: PgConnection,
+}
+
+fn establish_connection() -> PgConnection {
+    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    PgConnection::establish(&database_url).expect(&format!("Error connecting to {}", database_url))
 }
 
 fn main() {
@@ -46,8 +35,11 @@ fn main() {
         .expect("PORT must be a number");
 
     // Start a server, configuring the resources to serve.
-    HttpServer::new(|| {
+    HttpServer::new(move || {
         App::new()
+            .data(AppState {
+                db: establish_connection(),
+            })
             .wrap(IdentityService::new(
                 CookieIdentityPolicy::new(SECRET_KEY.as_bytes())
                     .name("auth")
@@ -56,16 +48,17 @@ fn main() {
                     .domain("https://coal-me.herokuapp.com/")
                     .max_age_time(chrono::Duration::hours(12)),
             ))
-            .service(fs::Files::new("/logged", "./static/logged").index_file("index.html"))
-            .service(fs::Files::new("/", "./static/").index_file("index.html"))
-            
-            //.service()
+            .service(fs::Files::new("/", "./static").index_file("index.html"))
+            .service(
+                web::resource("/auth/{userID}")
+                    .route(web::post().to(auth::login))
+                    .route(web::get().to(auth::logged))
+                    .route(web::delete().to(auth::logout)),
+            )
+            .service(web::scope("/api").service(web::resource("material").route(web::get())))
             .default_service(web::route().to(|| HttpResponse::NotFound()))
-        // .resource("/test", |r| r.f(welcome))
-        // .resource("/static/{res}", |r| r.f(static_data))
-        // .resource("/req/{name}", |r| r.f(greet))
     })
-    .bind(("localhost", port))
+    .bind(("0.0.0.0", port))
     .expect("Can not bind to port 8000")
     .run();
 }
