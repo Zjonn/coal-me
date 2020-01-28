@@ -7,35 +7,24 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>
 
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
-    <table id="users" class="table">
-        <thead>
-            <tr class="table-hd">
-                <th>Imie</th>
-                <th>Nazwisko</th>
-                <th>Kod pocztowy</th>
-                <th>Data urodzenia</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>John </td>
-                <td>Doe</td>
-                <td>123</td>
-                <td>12-01-1990</td>
-                <td> <button class="rm_button">Remove</button></td>
-            </tr>
-        </tbody>
-    </table>
     <button id="create-user" class="button">Create new user</button>
-   
+
     <div id="dialog-confirm" title="Na pewno chcesz usunąć wpis?">
     </div>
     <SCRIPT language="javascript" type="text/javascript" src="main.js"></SCRIPT>
+
+    <a href="login.html" onclick="signOut();">Sign out</a>
+    <script>
+        function signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            console.log("User logout")
+        }
+    </script>
 </body>
 
 </html>

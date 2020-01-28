@@ -49,7 +49,7 @@ async fn main() -> std::io::Result<()> {
                     .domain("https://coal-me.herokuapp.com/")
                     .max_age_time(chrono::Duration::hours(12)),
             ))
-            .service(fs::Files::new("/", "./static").index_file("login/index.html"))
+            .service(fs::Files::new("/", "./static").index_file("login.html"))
             .service(
                 web::resource("/auth/{userID}")
                     .route(web::post().to(auth::login))
