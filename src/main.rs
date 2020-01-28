@@ -27,10 +27,11 @@ fn establish_connection() -> PgConnection {
     PgConnection::establish(&database_url).expect(&format!("Error connecting to {}", database_url))
 }
 
-fn main() {
+#[actix_rt::main]
+async fn main() -> std::io::Result<()> {
     // Get the port number to listen on.
     let port = env::var("PORT")
-        .unwrap_or_else(|_| "3000".to_string())
+        .unwrap_or_else(|_| "8000".to_string())
         .parse()
         .expect("PORT must be a number");
 
@@ -58,7 +59,8 @@ fn main() {
             .service(web::scope("/api").service(web::resource("material").route(web::get())))
             .default_service(web::route().to(|| HttpResponse::NotFound()))
     })
-    .bind(("0.0.0.0", port))
+    .bind(("localhost", port))
     .expect("Can not bind to port 8000")
-    .run();
+    .run()
+    .await
 }
