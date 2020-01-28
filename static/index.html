@@ -22,7 +22,9 @@
     <script>
         function signOut() {
             var auth2 = gapi.auth2.getAuthInstance();
-            console.log("User logout")
+            auth2.signOut().then(function () {
+                console.log('User signed out.');
+            });
         }
     </script>
 </body>
