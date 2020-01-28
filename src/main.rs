@@ -38,9 +38,9 @@ async fn main() -> std::io::Result<()> {
     // Start a server, configuring the resources to serve.
     HttpServer::new(move || {
         App::new()
-            // .data(AppState {
-            //     db: establish_connection(),
-            // })
+            .data(AppState {
+                db: establish_connection(),
+            })
             .wrap(IdentityService::new(
                 CookieIdentityPolicy::new(SECRET_KEY.as_bytes())
                     .name("auth")
@@ -59,7 +59,7 @@ async fn main() -> std::io::Result<()> {
             .service(web::scope("/api").service(web::resource("material").route(web::get())))
             .default_service(web::route().to(|| HttpResponse::NotFound()))
     })
-    .bind(("localhost", port))
+    .bind(("0.0.0.0", port))
     .expect("Can not bind to port 8000")
     .run()
     .await
