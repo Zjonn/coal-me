@@ -38,9 +38,9 @@ async fn main() -> std::io::Result<()> {
     // Start a server, configuring the resources to serve.
     HttpServer::new(move || {
         App::new()
-            .data(AppState {
-                db: establish_connection(),
-            })
+            // .data(AppState {
+            //     db: establish_connection(),
+            // })
             .wrap(IdentityService::new(
                 CookieIdentityPolicy::new(SECRET_KEY.as_bytes())
                     .name("auth")
