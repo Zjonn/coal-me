@@ -12,21 +12,24 @@
 </head>
 
 <body>
-    <button id="create-user" class="button">Create new user</button>
+    <header>CoalMe</header>
 
-    <div id="dialog-confirm" title="Na pewno chcesz usunąć wpis?">
-    </div>
-    <SCRIPT language="javascript" type="text/javascript" src="main.js"></SCRIPT>
+    <section><button id="create-user" class="button">Create new user</button>
 
-    <a href="login.html" onclick="signOut();">Sign out</a>
-    <script>
-        function signOut() {
-            var auth2 = gapi.auth2.getAuthInstance();
-            auth2.signOut().then(function () {
-                console.log('User signed out.');
-            });
-        }
-    </script>
+        <div id="dialog-confirm" title="Na pewno chcesz usunąć wpis?">
+        </div>
+        <script language="javascript" type="text/javascript" src="main.js"></script>
+
+        <a href="login.html" onclick="signOut();">Sign out</a>
+        <script>
+            function signOut() {
+                var auth2 = gapi.auth2.getAuthInstance();
+                auth2.signOut().then(function () {
+                    console.log('User signed out.');
+                });
+            }
+        </script>
+    </section>
 </body>
 
 </html>

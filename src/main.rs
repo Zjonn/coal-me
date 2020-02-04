@@ -4,23 +4,22 @@ use std::env;
 use diesel::pg::PgConnection;
 use diesel::prelude::*;
 
-use actix_diesel::Database;
 use actix_files as fs;
 use actix_identity::{CookieIdentityPolicy, IdentityService};
-use actix_web::{web, App, HttpRequest, HttpResponse, HttpServer, Responder, Result};
+use actix_web::{web, App, HttpResponse, HttpServer};
 
 mod auth;
 
-#[macro_use]
 extern crate lazy_static;
 
 lazy_static::lazy_static! {
-pub  static ref SECRET_KEY: String = "CoalME".repeat(8);
+pub static ref SECRET_KEY: String = "CoalME".repeat(8);
 }
 
-pub struct AppState {
+struct AppState {
     db: PgConnection,
 }
+
 
 fn establish_connection() -> PgConnection {
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
@@ -39,8 +38,9 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .data(AppState {
-                db: establish_connection(),
+                db: establish_connection()
             })
+            .data(auth::security::Crypto::new())
             .wrap(IdentityService::new(
                 CookieIdentityPolicy::new(SECRET_KEY.as_bytes())
                     .name("auth")
