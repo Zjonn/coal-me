@@ -27,8 +27,7 @@ impl FromRequest for LoggedUser {
 
             if let Ok(cookie) = cookie.await {
                 if let Some(id) = cookie.identity() {
-                    let decoded_id = crypto.decode(id);
-                    Some(decoded_id)
+                    crypto.decode(id)
                 } else {
                     None
                 }
@@ -37,7 +36,7 @@ impl FromRequest for LoggedUser {
             }
         };
 
-        if let Some(id) = block_on(cmp).unwrap() {
+        if let Some(id) = block_on(cmp) {
             ok(LoggedUser { id })
         } else {
             err(HttpResponse::build(StatusCode::NOT_FOUND).into())
