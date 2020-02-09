@@ -50,7 +50,7 @@ async fn main() -> std::io::Result<()> {
                     .max_age_time(chrono::Duration::hours(12)),
             ))
             .service(
-                web::resource("/auth")
+                web::resource("/auth/{userID}")
                     .route(web::post().to(auth::login))
                     .route(web::get().to(auth::logged))
                     .route(web::delete().to(auth::logout)),
