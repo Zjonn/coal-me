@@ -49,7 +49,6 @@ async fn main() -> std::io::Result<()> {
                     .domain("https://coal-me.herokuapp.com/")
                     .max_age_time(chrono::Duration::hours(12)),
             ))
-            .service(fs::Files::new("/", "./static").index_file("login.html"))
             .service(
                 web::resource("/auth/{userID}")
                     .route(web::post().to(auth::login))
@@ -57,6 +56,7 @@ async fn main() -> std::io::Result<()> {
                     .route(web::delete().to(auth::logout)),
             )
             .service(web::scope("/api").service(web::resource("material").route(web::get())))
+            .service(fs::Files::new("/", "./static").index_file("login.html"))
             .default_service(web::route().to(|| HttpResponse::NotFound()))
     })
     .bind(("0.0.0.0", port))
