@@ -7,6 +7,8 @@ use actix_web::{web, FromRequest, HttpRequest, HttpResponse, Result};
 use futures::executor::block_on;
 use futures::future::{err, ok, Ready};
 
+use serde::Deserialize;
+
 pub mod security;
 
 pub struct LoggedUser {
@@ -44,13 +46,18 @@ impl FromRequest for LoggedUser {
     }
 }
 
-pub trait EncodeLoggedUser: Sized {
-    fn encode(&self, data: String) -> String;
-    fn decode(&self, data: String) -> Option<String>;
+#[derive(Deserialize)]
+pub struct AuthRequest {
+    client_id: String,
 }
 
-pub async fn login(id: Identity, data: web::Data<security::Crypto>) -> HttpResponse {
-    let encoded_token = data.encode("XD".parse().unwrap());
+pub async fn login(
+    id: Identity,
+    data: web::Data<security::Crypto>,
+    auth_req: web::Query<AuthRequest>,
+) -> HttpResponse {
+    let client_id = auth_req.client_id.clone();
+    let encoded_token = data.encode(client_id);
     id.remember(encoded_token);
     Response::build(StatusCode::OK).finish()
 }
