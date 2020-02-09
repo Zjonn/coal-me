@@ -25,9 +25,13 @@ impl FromRequest for LoggedUser {
         let cmp = async {
             let crypto = crypto.await.expect("Server corrupted!");
 
-            if let Some(id) = cookie.await.unwrap().identity() {
-                let decoded_id = crypto.decode(id);
-                Some(decoded_id)
+            if let Ok(cookie) = cookie.await {
+                if let Some(id) = cookie.identity() {
+                    let decoded_id = crypto.decode(id);
+                    Some(decoded_id)
+                } else {
+                    None
+                }
             } else {
                 None
             }
